@@ -74,14 +74,14 @@ class NMRGaussianProcess:
                                           max_iter=self.max_iterations, warm_start=False, random_state=self.seed)
 
         # Create directories to save outputs
-        if not os.path.exists(os.path.join(self.output_path, "bumps_output")):
-            os.makedirs(os.path.join(self.output_path, "bumps_output"))
-        if not os.path.exists(os.path.join(self.output_path, "bumps_output", self.well)) and self.plots:
-            os.makedirs(os.path.join(self.output_path, "bumps_output", self.well))
-        if not os.path.exists(os.path.join(self.output_path, "bumps_output", "CSV")):
-            os.makedirs(os.path.join(self.output_path, "bumps_output", "CSV"))
-        if not os.path.exists(os.path.join(output_folder, "bumps_output", "Permeability")):
-            os.makedirs(os.path.join(output_folder, "bumps_output", "Permeability"))
+        if not os.path.exists(os.path.join(self.output_path, "anthills_output")):
+            os.makedirs(os.path.join(self.output_path, "anthills_output"))
+        if not os.path.exists(os.path.join(self.output_path, "anthills_output", self.well)) and self.plots:
+            os.makedirs(os.path.join(self.output_path, "anthills_output", self.well))
+        if not os.path.exists(os.path.join(self.output_path, "anthills_output", "CSV")):
+            os.makedirs(os.path.join(self.output_path, "anthills_output", "CSV"))
+        if not os.path.exists(os.path.join(output_folder, "anthills_output", "Permeability")):
+            os.makedirs(os.path.join(output_folder, "anthills_output", "Permeability"))
 
     def process_depth(self, df_row):
         depth_start = time()
@@ -119,7 +119,7 @@ class NMRGaussianProcess:
         handles, labels = plt.gca().get_legend_handles_labels()
         by_label = OrderedDict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys())
-        fig.savefig(os.path.join(self.output_path, "bumps_output", self.well, self.well + "_" + str(depth) + ".png"))
+        fig.savefig(os.path.join(self.output_path, "anthills_output", self.well, self.well + "_" + str(depth) + ".png"))
         # plt.show()
         plt.close()
 
@@ -143,10 +143,10 @@ class NMRGaussianProcess:
         perm.rename("GMM_Perm", inplace=True)
 
         # Save outputs
-        means.to_csv(os.path.join(self.output_path, "bumps_output", "CSV", self.well+"_means.csv"))
-        variances.to_csv(os.path.join(self.output_path, "bumps_output", "CSV", self.well+"_variances.csv"))
-        weights.to_csv(os.path.join(self.output_path, "bumps_output", "CSV", self.well+"_weights.csv"))
-        perm.to_csv(os.path.join(output_folder, "bumps_output", "Permeability", self.well+"_bumps.csv"), header=True)
+        means.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_means.csv"))
+        variances.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_variances.csv"))
+        weights.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_weights.csv"))
+        perm.to_csv(os.path.join(output_folder, "anthills_output", "Permeability", self.well+"_anthills.csv"), header=True)
 
 
 def multiprocessing_helper(las_file):
@@ -162,8 +162,8 @@ output_folder = os.pardir
 
 if __name__ == "__main__":
     # Create folder for saving outputs
-    if not os.path.exists(os.path.join(output_folder, "bumps_output")):
-        os.makedirs(os.path.join(output_folder, "bumps_output"))
+    if not os.path.exists(os.path.join(output_folder, "anthills_output")):
+        os.makedirs(os.path.join(output_folder, "anthills_output"))
 
     input_folder = os.path.join(os.pardir, "Input_files")
     las_files = [f for f in os.listdir(input_folder) if os.path.isfile(os.path.join(input_folder, f))]
