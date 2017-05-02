@@ -140,13 +140,13 @@ class NMRGaussianProcess:
 
         # Calculate permeability using modified SDR component model
         perm = (((self.phit * weights) ** 4) * ((10 ** means) ** 2)).sum(axis=1)
-        perm.rename("GMM_Perm", inplace=True)
+        perm.rename("Perm_GMM", inplace=True)
 
         # Save outputs
         means.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_means.csv"))
         variances.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_variances.csv"))
         weights.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_weights.csv"))
-        perm.to_csv(os.path.join(output_folder, "anthills_output", "Permeability", self.well+"_anthills.csv"), header=True)
+        perm.to_csv(os.path.join(output_folder, "anthills_output", "Permeability", self.well+"_NMRGMM.csv"), header=True)
 
 
 def multiprocessing_helper(las_file):
