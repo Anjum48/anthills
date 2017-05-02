@@ -138,15 +138,20 @@ class NMRGaussianProcess:
         variances = pd.DataFrame(data=np.array(variances), index=self.df.index)
         weights = pd.DataFrame(data=np.array(weights), index=self.df.index)
 
-        # Calculate permeability using modified SDR component model
-        perm = (((self.phit * weights) ** 4) * ((10 ** means) ** 2)).sum(axis=1)
-        perm.rename("Perm_GMM", inplace=True)
+        # Calculate permeability using modified SDR component model for different FF cutoffs
+        perm_dict = {}
+        for cutoff in [0.3, 50, 100]:
+            means_filtered = means[(means > np.log10(cutoff)) & (weights > 0.01)].fillna(0)
+            weights_filtered = weights[(means > np.log10(cutoff)) & (weights > 0.01)].fillna(0)
+            weights_filtered = weights_filtered.div(np.sum(weights_filtered, axis=1), axis=0).fillna(0)
+            perm_dict["Perm_GMM_" + str(cutoff) + "ms"] = (((self.phit * weights_filtered) ** 4) * ((10 ** means_filtered) ** 2)).sum(axis=1)
+        perm = pd.DataFrame(perm_dict)
 
         # Save outputs
         means.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_means.csv"))
         variances.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_variances.csv"))
         weights.to_csv(os.path.join(self.output_path, "anthills_output", "CSV", self.well+"_weights.csv"))
-        perm.to_csv(os.path.join(output_folder, "anthills_output", "Permeability", self.well+"_NMRGMM.csv"), header=True)
+        perm.to_csv(os.path.join(output_folder, "anthills_output", "Permeability", self.well+"_NMRGMM.csv"))
 
 
 def multiprocessing_helper(las_file):
